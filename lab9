@@ -1,0 +1,90 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+#define MAXLENGHT 255 //max length for one string
+
+void fileprint(FILE* file_to_print);
+void Copy(FILE* FromHere, FILE* ToHere);
+void check (FILE *ToHere);
+
+int main()
+{
+    FILE* from; //file to read
+    FILE* to; //file to write
+    
+    if ((from = fopen("from.txt", "r")) == NULL) //opening file from
+    {
+       perror("Can't open a file from");
+       exit(0);
+    }
+       
+    //printing a file "from"
+    printf("1st file:\n");
+    printf("------------------------------------------\n");
+    fileprint(from);
+    printf("------------------------------------------\n");
+    
+    printf("\nCopying strings without 'A' on the first position...\n");
+    //copying strings from "from" to "to"
+    rewind(from);
+    if ((to = fopen("to.txt", "w")) == NULL) //opening file to
+        {
+            perror("Can't open a file to");
+            exit(0);
+        }
+    Copy(from, to);
+    
+    fclose(from); //closing "from"
+    
+    //printing a file "to"
+    fclose(to);
+    to = fopen("to.txt", "r");
+    printf("2nd file:\n");
+    printf("------------------------------------------\n");
+    fileprint(to);
+    printf("------------------------------------------\n");
+    
+    fclose(to);
+    to = fopen("to.txt", "r");
+    
+    check (to);
+    printf("------------------------------------------\n");
+    fclose(to);
+    
+    return 0;
+}
+
+void fileprint(FILE* file_to_print)
+{
+    char buff[MAXLENGHT];
+    while (fgets(buff, MAXLENGHT, file_to_print))
+        printf("%s", buff);
+}
+void Copy(FILE* FromHere, FILE* ToHere)
+{
+    char buff[MAXLENGHT];
+    while(fgets(buff, MAXLENGHT, FromHere) != NULL)
+    {
+        if (buff[0] != 'A' && buff[0] != 'a')
+        {
+            fputs(buff, ToHere);
+           
+        }
+    }
+}            
+void check (FILE* ToHere)
+{
+    int counter = 0;
+    char buff[MAXLENGHT];
+    int i = 0 ;
+    fgets(buff, MAXLENGHT, ToHere);
+        
+            while(buff[i] != ' ') 
+            {           
+                    counter++;
+                    i++; 
+            }      
+        
+        printf ("Amount of character in first word : %d\n", counter);      
+}
